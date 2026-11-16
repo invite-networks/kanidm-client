@@ -22,7 +22,7 @@ sudo apt install kanidm-unixd
 
 ## Versions
 
-The package version is the upstream version plus an INVITE revision: `1.12.0-invite1`. The revision goes up when the packaging changes without a new upstream release.
+The package version is the upstream version plus an INVITE revision: `1.12.1-invite1`. The revision goes up when the packaging changes without a new upstream release.
 
 The upstream tag, its commit, and the Rust version are pinned in [upstream.env](upstream.env). The build fails if the tag does not resolve to the pinned commit.
 
@@ -38,7 +38,7 @@ Packages land in `dist/`, built for the host's architecture.
 ## Release
 
 1. Update `upstream.env` (tag, commit from `git ls-remote https://github.com/kanidm/kanidm.git refs/tags/<tag>`, the tag's `rust-version`). Open a pull request. CI builds and installs the packages on Debian 13.
-2. Merge, then tag `v<upstream>-invite<N>`, for example `v1.12.0-invite1`, and push the tag.
+2. Merge, then tag `v<upstream>-invite<N>`, for example `v1.12.1-invite1`, and push the tag.
 3. The release workflow builds, smoke tests, creates the GitHub Release with `SHA256SUMS` and build provenance, and commits the packages to the apt repository's `pool/main/k/kanidm/`.
 
 Publishing needs the `APT_DEPLOY_KEY` secret: the private half of a write deploy key on `invite-networks/apt` used only by this repository.
