@@ -1,0 +1,31 @@
+# Local build and smoke test, the same scripts the release workflow runs.
+#   docker compose run --rm build
+#   docker compose run --rm smoke
+# Packages land in ./dist. Builds for the host architecture.
+name: kanidm-client
+
+services:
+  build:
+    # Built on the only supported target, Debian 13.
+    image: rust:1.96-trixie
+    working_dir: /work
+    environment:
+      # Docker Desktop bind mounts are unreliable for rustc output. Build inside the container.
+      CARGO_TARGET_DIR: /cargo-target
+    volumes:
+      - ./:/work
+    command: ["sh", "-c", "scripts/build-deps.sh && scripts/package.sh ${INVITE_REVISION:-invite0}"]
+
+  smoke:
+    image: debian:13-slim
+    working_dir: /work
+    volumes:
+      - ./:/work:ro
+    command: ["scripts/smoke.sh"]
+
+  lint:
+    image: koalaman/shellcheck:v0.10.0
+    working_dir: /work
+    volumes:
+      - ./:/work:ro
+    command: ["-x", "scripts/build-deps.sh", "scripts/package.sh", "scripts/smoke.sh"]
